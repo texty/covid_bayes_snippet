@@ -1,4 +1,4 @@
-# pasyuta_calculator_snippet
+# covid_bayes_snippet
 
 ## Project setup
 ```

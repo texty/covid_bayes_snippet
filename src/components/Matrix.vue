@@ -96,11 +96,13 @@ export default {
     }
 
     .left {
-      background: linear-gradient(to left, pink, transparent);
+      // background: linear-gradient(to left, pink, transparent);
+      background: rgba(255, 192, 203, 0.41);
     }
 
     .right {
-      background: linear-gradient(to right, greenyellow, transparent);
+      // background: linear-gradient(to right, greenyellow, transparent);
+      background: rgba(172, 255, 47, 0.311);
       flex-grow: 1;
     }
   }
