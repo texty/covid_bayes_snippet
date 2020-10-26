@@ -1,7 +1,7 @@
 <template>
     <div class="line" ref="line" :style="{ top: this.top + 'px' }">
         <div class="handle"></div>
-        <p>{{ top }}</p>
+        <p>{{ p(top/400) }}</p>
     </div>
 
 </template>
@@ -27,6 +27,8 @@ export default {
         dragstart: function(event) {
 
         },
+
+        p: d3.format(".0%")
 
 
     }
