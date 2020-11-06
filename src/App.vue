@@ -1,21 +1,26 @@
 <template>
   <div id="app">
-    <Matrix />
+    <Calculator />
+    <p></p>
+    <p></p>
+    <p></p>  
   </div>
 </template>
 
 <script>
 
 import Matrix from './components/Matrix';
+import Calculator from './components/Calculator';
 
 
 export default {
   name: 'app',
-  data() {
+  // data() {
 
-  },
+  // },
   components: {
-    Matrix,
+    // Matrix,
+    Calculator,
   },
   
   mounted() {
@@ -57,6 +62,11 @@ html {
 
 body {
   line-height: 1.5;
+  font-size: 14px;
+}
+
+input {
+  font-size: 16px;
 }
 
 p {
