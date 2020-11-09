@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Calculator />
+    <Calculator @height_changed="onresize"/>
     <p></p>
     <p></p>
     <p></p>  
@@ -38,7 +38,10 @@ export default {
 
   methods: {
     onresize(e) {
+      this.$nextTick(function(){
         this.height = document.documentElement.offsetHeight
+
+      })
     }
   },
 

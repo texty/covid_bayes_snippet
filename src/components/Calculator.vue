@@ -121,6 +121,12 @@ export default {
 
   },
 
+  watch: {
+    tested: function(val) {
+      this.$emit('height_changed');
+    }
+  },
+
   components: {
     Human,
     AdjustableNumber,
