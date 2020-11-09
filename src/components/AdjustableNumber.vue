@@ -5,7 +5,7 @@
                 type="number" :max="max" :min="min" :step="step"
                 hidden="true">
         <span class="adjustable-number-span" ref="draggable">{{ value }} %</span> 
-        <span class="hint"> тягни! </span>
+        <span :class="`hint ${tooltip_fixed ? 'fixed' : ''}`"> тягни! </span>
     </span> 
 </template>а
 
@@ -35,6 +35,7 @@ export default {
         return {
             domain: 450,
             dragging: false,
+            tooltip_fixed: true,
         }
     },
 
@@ -62,6 +63,7 @@ export default {
         },
 
         dragstart: function(event) {
+            this.tooltip_fixed = false;
             this.dragging = true;
             this.$refs.draggable.setPointerCapture(event.identifier);
 
@@ -92,6 +94,10 @@ export default {
         z-index: 100000;
 
         display: none;
+
+        &.fixed {
+            display: block;
+        }
     }
 
     &:hover, &:focus {

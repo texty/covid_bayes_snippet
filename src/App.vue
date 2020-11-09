@@ -15,20 +15,51 @@ import Calculator from './components/Calculator';
 
 export default {
   name: 'app',
-  // data() {
+  data() {
+    return {
+      height: 200,
+    }
+  },
 
-  // },
   components: {
-    // Matrix,
     Calculator,
   },
   
   mounted() {
+     this.$nextTick(function(){
+        this.onresize();
+        window.addEventListener("resize", this.onresize)
+    })
   },
-  
+
+  destroyed() {
+    window.removeEventListener("resize", this.onresize)
+  },
+
   methods: {
-    
-  }
+    onresize(e) {
+        this.height = document.documentElement.offsetHeight
+    }
+  },
+
+    watch: {
+      height: {
+          handler(val) {
+            //this.$emit("dimensions_changed", this.height)
+            //var height = document.documentElement.offsetHeight
+            //console.log("scrollHeight")
+            //console.log(scrollHeight);
+            console.log(this.height)
+            
+            window.parent.postMessage(this.height
+              // set target domain
+              ,"*"
+            )},
+          //deep: true,
+      }
+    }
+
+
 }
 </script>
 
@@ -49,6 +80,11 @@ html {
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --col-salmon: #ff673f; 
 }
@@ -63,6 +99,7 @@ html {
 body {
   line-height: 1.5;
   font-size: 14px;
+  margin: 0 auto;
 }
 
 input {

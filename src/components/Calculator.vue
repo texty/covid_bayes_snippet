@@ -8,7 +8,7 @@
       </p>
     <div class="legend row">
       <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
-      <p v-if="all_n"><human class="human healthy"/> <span> у {{ 100-pre_test_p }} людей ковіду немає </span></p>  
+      <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
     </div>
     <div :class="`people ${this.tested ? 'tested' : ''}`">
       <human v-for="p in people" :key="p.i" 
@@ -46,7 +46,8 @@ export default {
   mounted() {
     let self = this;
 
-    for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 'all_n']) {
+    for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
+                    'all_n', 'sensitivity', 'specificity', 'tested']) {
       set_from_query(p);
     }
 
@@ -58,26 +59,24 @@ export default {
   
   data() {
     return {
-        total: 100,
+      // total: 100,
 
-        pre_test_p: 80,
-        sensitivity: 0.7,
-        specificity: 0.97,
-        tested: false,
-        
-        pre_test_readonly: false,
+      pre_test_p: 80,
+      sensitivity: 0.7,
+      specificity: 0.97,
+      tested: false,
+      
+      pre_test_readonly: false,
 
-        all_p: true,
-        all_n: true,
-        
-        tp: true, 
-        tn: true, 
-        fp: true, 
-        fn: true,
+      all_p: true,
+      all_n: true,
+      
+      tp: true, 
+      tn: true, 
+      fp: true, 
+      fn: true,
 
-
-
-        pf: d3.format(".0%"),
+      pf: d3.format(".0%"),
     }
   },
   computed: {
@@ -154,6 +153,7 @@ export default {
   .main-box {
     width: 430px;
     margin: 100px auto;
+    padding-top: 2em;
 
     .human {
       
