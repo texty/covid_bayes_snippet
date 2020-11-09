@@ -48,10 +48,6 @@ export default {
     watch: {
       height: {
           handler(val) {
-            //this.$emit("dimensions_changed", this.height)
-            //var height = document.documentElement.offsetHeight
-            //console.log("scrollHeight")
-            //console.log(scrollHeight);
             console.log(this.height)
             
             window.parent.postMessage(this.height

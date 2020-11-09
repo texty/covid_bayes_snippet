@@ -158,7 +158,7 @@ export default {
 
   .main-box {
     width: 430px;
-    margin: 100px auto;
+    margin: 0 auto;
     padding-top: 2em;
 
     .human {
