@@ -2,21 +2,37 @@
 <template>
 <div class="container">
   <div class="main-box">
-    <p class='row'>100 людей. Відсоток захворюваності 
+    <p class="row middle-content"><span>100 людей.</span> <span v-if="show_infection_rate"> Відсоток захворюваності 
       <span v-if="pre_test_readonly"> {{pre_test_p}}%</span>
       <adjustable-number v-else :value.sync="pre_test_p" />
+      </span>
       </p>
-    <div class="legend row">
+    <div class="legend row middle-content">
       <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
       <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
     </div>
     <div :class="`people ${this.tested ? 'tested' : ''}`">
-      <human v-for="p in people" :key="p.i" 
-            :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+      
+      <div class="split" v-if="split">
+        <div class="microbox">
+          <human v-for="p in people.ill" :key="p.i" 
+                :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+        </div>
+        
+        <div class="microbox">
+          <human v-for="p in people.healthy" :key="p.i" 
+                :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+        </div>
+      </div>
+      <div v-else class="middle-content">
+        <human v-for="p in [...people.ill, ...people.healthy]" :key="p.i" 
+              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+
+      </div>
     </div>
 
 
-    <div class="legend row-after tested" v-if="tested">
+    <div class="legend row-after tested middle-content" v-if="tested">
       <p v-if="tp"><human class="human ill test_positive"/> <span>  {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
       <p v-if="fn"><human class="human ill test_negative"/> <span> {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
       <p v-if="tn"><human class="human healthy test_negative"/> <span> {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
@@ -47,7 +63,7 @@ export default {
     let self = this;
 
     for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
-                    'all_n', 'sensitivity', 'specificity', 'tested']) {
+                    'all_n', 'sensitivity', 'specificity', 'tested', 'split']) {
       set_from_query(p);
     }
 
@@ -65,6 +81,8 @@ export default {
       sensitivity: 0.7,
       specificity: 0.97,
       tested: false,
+      split: false,
+      show_infection_rate: true,
       
       pre_test_readonly: false,
 
@@ -82,21 +100,25 @@ export default {
   computed: {
     people() {
 
-      let res = [];
+      //let res = [];
 
       let people_counter = 0;
 
+      let ill = [];
+
       for (let i=0; i < this.pre_test_p; i++) {
-        res.push({ key: people_counter, covid: true, test: i < this.true_positive_p })
+        ill.push({ key: people_counter, covid: true, test: i < this.true_positive_p })
         people_counter++;
       }
 
+      let healthy = [];
+
       for (var i=0; i < (100 - this.pre_test_p); i++) {
-        res.push({ key: people_counter, covid: false, test: !(i < Math.round((1 - this.pre_test) * this.specificity * 100))})
+        healthy.push({ key: people_counter, covid: false, test: !(i < Math.round((1 - this.pre_test) * this.specificity * 100))})
         people_counter++
       }
 
-      return res;
+      return {ill, healthy};
     },
 
     pre_test() {
@@ -136,57 +158,82 @@ export default {
  
 
  <style lang="scss" scoped>
-  .container {
-    width: 100%;
-  }
+.container {
+  width: 100%;
+}
 
-  .row {
-    margin-bottom: 1em;
-  }
+.row {
+  margin-bottom: 1em;
+}
 
-  p {
-    margin-bottom: 0
-  }
+p {
+  margin-bottom: 0
+}
+
+.human {
+  vertical-align: middle;
+  height: 24px;
+  width: 16px;
+  // margin:0 3px;
+
+}
+
+.middle-content {
+  max-width: 430px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.main-box {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 2em;
 
   .human {
-    vertical-align: middle;
-    height: 24px;
-    width: 16px;
-    // margin:0 3px;
-
-  }
-
-  .main-box {
-    width: 430px;
-    margin: 0 auto;
-    padding-top: 2em;
-
-    .human {
-      
-      &.ill {
-        fill: #000;
-      }
-
-      &.healthy {
-        opacity: 0.5;
-      }
-    }
     
-    .row-after {
-      margin-top: 1em;
-      width: 100%;
-      button {
-        margin: 0 auto;
-      }
+    &.ill {
+      fill: #000;
     }
-  }
 
-  .people {
-    .human {
-      margin-right: 5px;
-      margin-bottom: 5px;;
+    &.healthy {
+      opacity: 0.5;
     }
   }
+  
+  .row-after {
+    margin-top: 1em;
+    width: 100%;
+    button {
+      margin: 0 auto;
+    }
+  }
+}
+
+.people {
+  .human {
+    margin-right: 5px;
+    margin-bottom: 5px;;
+    flex-shrink: 0;
+  }
+}
+
+.people {
+  .split {
+    min-height: 16em;
+    display: flex;
+    gap: 3em;
+
+    .microbox {
+      display: flex;
+      flex-flow: wrap;
+      align-content: flex-start;
+      
+      min-width: 300px;
+      max-width: 430px;
+    }
+
+  }
+}
 
 input[type='number'] {
   max-width: 3em;
