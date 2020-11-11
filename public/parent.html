@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+  </head>
+  <body>
+    <iframe src="http://localhost:8080" frameborder="0" scrolling="no" style="width: 100%;"></iframe>
+  
+
+    <script>
+
+        function getFrameByEvent(event) {
+          return [].slice.call(document.getElementsByTagName('iframe')).filter(function(iframe) {
+            return iframe.contentWindow === event.source;
+          })[0];
+        }
+        // browser compatibility: get method for event 
+        // addEventListener(FF, Webkit, Opera, IE9+) and attachEvent(IE5-8)
+        var myEventMethod = 
+           window.addEventListener ? "addEventListener" : "attachEvent";
+        // create event listener
+        var myEventListener = window[myEventMethod];
+        // browser compatibility: attach event uses onmessage
+        var myEventMessage = 
+           myEventMethod == "attachEvent" ? "onmessage" : "message";
+        // register callback function on incoming message
+        myEventListener(myEventMessage, function (e) {
+            // we will get a string (better browser support) and validate
+            // if it is an int - set the height of the iframe #my-iframe-id
+            if (e.data !== parseInt(e.data)) return;
+            var iframe = getFrameByEvent(e);
+            __resize_iframe(iframe, e.data);
+            // var iframes = document.getElementsByTagName('IFRAME');
+            
+            // for (var i=0; i<iframes.length; i++){
+            //     var iframe = iframes[i];
+            //     if (iframe.classList.contains('resizeme')) {
+            //         __resize_iframe(iframe, e.data);    
+            //     }
+            // }
+        }, false);
+        
+        
+        
+        function __resize_iframe(el, height) {
+          if(el) {
+            el.height = height + "px";
+          }   
+        }
+        </script>
+</body>
+</html>
