@@ -7,13 +7,19 @@
       <adjustable-number v-else :value.sync="pre_test_p" />
       </span>
       </p>
-    <div class="legend row middle-content">
-      <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
-      <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
+    <div class="legend row">
+      <div :class="`split ${split ? 'active' : 'middle-content'}`">
+        <div class="microbox">
+          <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
+        </div>
+        <div class="microbox">
+          <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
+        </div>
+      </div>
     </div>
     <div :class="`people ${this.tested ? 'tested' : ''}`">
       
-      <div class="split" v-if="split">
+      <div class="split active" v-if="split">
         <div class="microbox">
           <human v-for="p in people.ill" :key="p.i" 
                 :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
@@ -32,11 +38,18 @@
     </div>
 
 
-    <div class="legend row-after tested middle-content" v-if="tested">
-      <p v-if="tp"><human class="human ill test_positive"/> <span>  {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
-      <p v-if="fn"><human class="human ill test_negative"/> <span> {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
-      <p v-if="tn"><human class="human healthy test_negative"/> <span> {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
-      <p v-if="fp"><human class="human healthy test_positive"/> <span> {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>  
+    <div class="legend row-after tested" v-if="tested">
+      <div :class="`split ${split ? 'active' : 'middle-content'}`">
+        <div class="microbox">
+          <p v-if="tp"><human class="human ill test_positive"/> <span>  {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
+          <p v-if="fn"><human class="human ill test_negative"/> <span> {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
+        </div>
+
+        <div class="microbox">
+          <p v-if="tn"><human class="human healthy test_negative"/> <span> {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
+          <p v-if="fp"><human class="human healthy test_positive"/> <span> {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>    
+        </div>
+      </div>
     </div>
 
 
@@ -217,22 +230,26 @@ p {
   }
 }
 
-.people {
-  .split {
-    min-height: 16em;
+.people .split {
+  min-height: 16em;
+}
+
+.split.active {
+  display: flex;
+  gap: 3em;
+
+  .microbox {
     display: flex;
-    gap: 3em;
-
-    .microbox {
-      display: flex;
-      flex-flow: wrap;
-      align-content: flex-start;
-      
-      min-width: 300px;
-      max-width: 430px;
-    }
-
+    flex-flow: wrap;
+    align-content: flex-start;
+    
+    min-width: 300px;
+    max-width: 430px;
   }
+
+}
+
+.people {
 }
 
 input[type='number'] {
