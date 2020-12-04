@@ -53,7 +53,7 @@
     </div>
 
 
-    <div class="row-after">
+    <div class="row-after" v-if="show_btn">
       <button @click="() =>tested = !tested">{{this.tested ? 'Скинути' : 'Тестувати за допомогою ПЦР!'}}</button>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
     let self = this;
 
     for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
-                    'all_n', 'sensitivity', 'specificity', 'tested', 'split']) {
+                    'all_n', 'sensitivity', 'specificity', 'tested', 'split', 'show_btn']) {
       set_from_query(p);
     }
 
@@ -93,9 +93,11 @@ export default {
       pre_test_p: 80,
       sensitivity: 0.7,
       specificity: 0.97,
-      tested: false,
-      split: false,
+      tested: true,
+      split: true,
       show_infection_rate: true,
+
+      show_btn: false,
       
       pre_test_readonly: false,
 

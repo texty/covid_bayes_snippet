@@ -3,7 +3,12 @@
     <Calculator @height_changed="onresize"/>
     <p></p>
     <p></p>
-    <p></p>  
+    <p></p>
+
+    <section class="chart-container">
+      <Chart />
+    </section>
+
   </div>
 </template>
 
@@ -11,6 +16,7 @@
 
 import Matrix from './components/Matrix';
 import Calculator from './components/Calculator';
+import Chart from './components/Chart';
 
 
 export default {
@@ -23,6 +29,7 @@ export default {
 
   components: {
     Calculator,
+    Chart,
   },
   
   mounted() {
@@ -63,7 +70,13 @@ export default {
 </script>
 
 <style lang="scss">
-html {
+section.chart-container {
+  padding: 0 2em;
+  max-width: 600px; 
+  margin: 0 auto;
+}
+
+html, svg {
   font-family:
     'ProximaNova',
     'Helvetica Neue',

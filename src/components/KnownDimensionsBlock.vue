@@ -13,9 +13,8 @@ export default {
             d: {
                 height: 0,
                 width: 0,
-    
                 left: 0,
-                // top: 0,
+                top: 0,
             }
         }
     },
@@ -36,6 +35,7 @@ export default {
             this.d.height = this.$el.offsetHeight
             this.d.width = this.$el.offsetWidth
             this.d.left = this.$el.offsetLeft
+            this.d.top = this.$el.offsetTop
         }
     },
 
