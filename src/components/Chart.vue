@@ -3,6 +3,13 @@
         @dimensions_changed="dimensions_changed" :style="{height: height + 'px'}">
 
         <svg ref="svg">
+            <defs>            
+            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="10" markerHeight="10"
+                    orient="auto-start-reverse">
+                <path d="M 0 2 L 10 5 L 0 8 z" />
+            </marker>
+            </defs>
             <g :transform="`translate(0, ${height - margin.bottom})`" class="x axis" ref="x_axis"> </g>
             <g :transform="`translate(${margin.left}, 0)`" class="y axis" ref="y_axis"> </g>
 
@@ -91,9 +98,12 @@ export default {
             
             d3.select(this.$refs.x_axis)
                 .call(this.xAxis)
+                .select("path").attr("marker-end", "url(#arrow)")
+
 
             d3.select(this.$refs.y_axis)
                 .call(this.yAxis)
+                .select("path").attr("marker-end", "url(#arrow)")
 
             console.log('change')
         }
