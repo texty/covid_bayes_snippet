@@ -2,11 +2,32 @@
 <template>
 <div class="container">
   <div class="main-box">
-    <p class="row middle-content"><span>100 людей.</span> <span v-if="show_infection_rate"> Відсоток захворюваності 
-      <span v-if="pre_test_readonly"> {{pre_test_p}}%</span>
-      <adjustable-number v-else :value.sync="pre_test_p" />
+    <p class="row middle-content">
+      <span>100 людей.</span> 
+      <span v-if="show_infection_rate">
+        Відсоток захворюваності 
+        <span v-if="pre_test_readonly"> {{pre_test_p}}%</span>
+        <adjustable-number v-else :value.sync="pre_test_p" >
+          <template v-slot:post_text> %</template>
+        </adjustable-number>
       </span>
-      </p>
+      
+      <br>
+      <span v-if="Number.isInteger(day_after_exposure)">
+        ПЛР тест зроблений на 
+        <adjustable-number id="day-after-exposure-an" 
+            :value.sync="day_after_exposure" 
+            :min="0" :max="20" 
+            :tooltip_fixed="false" 
+        >
+          <template v-slot:post_text>-ий</template>
+        </adjustable-number>
+        <span class="pre">&nbsp;&nbsp; день після контакту із вірусом. </span>
+      
+        <span>(чутливість: ~{{pf(sensitivity)}}) </span>
+      </span>
+    </p>    
+    
     <div class="legend row">
       <div :class="`split ${split ? 'active' : 'middle-content'}`">
         <div class="microbox">
@@ -65,6 +86,14 @@ import * as d3 from '../d3-modules'
 import Human from './Human'
 import AdjustableNumber from './AdjustableNumber'
 
+import chart_data from './../assets/chart_data.csv'
+
+chart_data.forEach(r => {
+    r.sensitivity = 1 - r.antisensitivity;
+});
+
+let sensitivity_map = new Map(chart_data.map(o => [o.day, o.sensitivity]))
+
 
 export default {
   created() {
@@ -76,7 +105,8 @@ export default {
     let self = this;
 
     for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
-                    'all_n', 'sensitivity', 'specificity', 'tested', 'split', 'show_btn']) {
+                    'all_n', 'sensitivity_default', 'specificity', 'tested', 'split', 'show_btn',
+                    'day_after_exposure']) {
       set_from_query(p);
     }
 
@@ -88,11 +118,10 @@ export default {
   
   data() {
     return {
-      // total: 100,
-
       pre_test_p: 80,
-      sensitivity: 0.7,
+      sensitivity_default: 0.7,
       specificity: 0.97,
+      day_after_exposure: 5,
       tested: true,
       split: true,
       show_infection_rate: true,
@@ -113,10 +142,15 @@ export default {
     }
   },
   computed: {
+    sensitivity() {
+      if (Number.isInteger(this.day_after_exposure)) {
+        return sensitivity_map.get(this.day_after_exposure)
+      } else {
+        return this.sensitivity_default
+      }
+    },
+
     people() {
-
-      //let res = [];
-
       let people_counter = 0;
 
       let ill = [];
@@ -251,8 +285,6 @@ p {
 
 }
 
-.people {
-}
 
 input[type='number'] {
   max-width: 3em;
@@ -318,5 +350,16 @@ button {
   svg {
     shape-rendering: crispEdges;
     // border: 1px solid black;
+  }
+
+  .adjustable-number-span {
+    display: inline-block;
+    min-width: 3em;
+  }
+
+  #day-after-exposure-an {
+    .adjustable-number-span {
+      min-width: 1.5em;
+    }
   }
  </style>

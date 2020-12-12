@@ -1,13 +1,6 @@
 <template>
   <div id="app">
     <Calculator @height_changed="onresize"/>
-    <p></p>
-    <p></p>
-    <p></p>
-
-    <section class="chart-container">
-      <Chart />
-    </section>
 
   </div>
 </template>
@@ -16,7 +9,6 @@
 
 import Matrix from './components/Matrix';
 import Calculator from './components/Calculator';
-import Chart from './components/Chart';
 
 
 export default {
@@ -29,7 +21,6 @@ export default {
 
   components: {
     Calculator,
-    Chart,
   },
   
   mounted() {

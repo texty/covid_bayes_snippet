@@ -4,7 +4,7 @@
                 @change="$emit('update:value', value);" 
                 type="number" :max="max" :min="min" :step="step"
                 hidden="true">
-        <span class="adjustable-number-span" ref="draggable">{{ value }} %</span> 
+        <span class="adjustable-number-span" ref="draggable">{{ value }}<slot name="post_text" /></span> 
         <span :class="`hint ${tooltip_fixed ? 'fixed' : ''}`"> тягни! </span>
     </span> 
 </template>а
@@ -28,14 +28,16 @@ export default {
             type: Number,
             default: 1
         },
-
+        tooltip_fixed: {
+            type: Boolean, 
+            default: true
+        },
     },
 
     data() {
         return {
             domain: 450,
             dragging: false,
-            tooltip_fixed: true,
         }
     },
 
@@ -92,12 +94,15 @@ export default {
         left: 0;
         color: #46f;
         z-index: 100000;
+        padding: 0 0.5em;
 
         display: none;
 
         &.fixed {
             display: block;
         }
+
+        background-color: rgba(255,255,255,0.9)
     }
 
     &:hover, &:focus {
