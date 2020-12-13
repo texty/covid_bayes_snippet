@@ -23,18 +23,22 @@
           <template v-slot:post_text>-ий</template>
         </adjustable-number>
         <span class="pre">&nbsp;&nbsp; день після контакту із вірусом. </span>
-      
-        <span>(чутливість: ~{{pf(sensitivity)}}) </span>
+         
       </span>
+      <span v-if="show_sensitivity">(чутливість: ~{{pf(sensitivity)}}) </span>
+      <br>
+      <span v-if="show_specificity">(специфічність: ~{{pf(specificity)}}) </span>
     </p>    
     
     <div class="legend row">
       <div :class="`split ${split ? 'active' : 'middle-content'}`">
         <div class="microbox">
           <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
+          <!-- <div class="hugging-line"></div> -->
         </div>
         <div class="microbox">
           <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
+          <!-- <div class="hugging-line"></div> -->
         </div>
       </div>
     </div>
@@ -105,7 +109,8 @@ export default {
     let self = this;
 
     for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
-                    'all_n', 'sensitivity_default', 'specificity', 'tested', 'split', 'show_btn',
+                    'all_n', 'sensitivity_default', 'specificity', 'tested', 'split', 
+                    'show_btn', 'show_sensitivity', 'show_specificity',
                     'day_after_exposure']) {
       set_from_query(p);
     }
@@ -118,13 +123,15 @@ export default {
   
   data() {
     return {
-      pre_test_p: 80,
+      pre_test_p: 80, // _p means in percents
       sensitivity_default: 0.7,
       specificity: 0.97,
       day_after_exposure: 5,
       tested: true,
       split: true,
       show_infection_rate: true,
+      show_sensitivity: false,
+      show_specificity: false,
 
       show_btn: false,
       
@@ -283,6 +290,14 @@ p {
     max-width: 430px;
   }
 
+}
+
+.hugging-line {
+  width: 100%;
+  height: 1em;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
 }
 
 
