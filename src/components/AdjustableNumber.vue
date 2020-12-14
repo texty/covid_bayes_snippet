@@ -1,11 +1,11 @@
 <template>
-    <span class="adjustable-number">
+    <span class="adjustable-number" :class="`${dragging ? 'dragging' : ''}`">
         <input v-model.number="value" 
                 @change="$emit('update:value', value);" 
                 type="number" :max="max" :min="min" :step="step"
                 hidden="true">
         <span class="adjustable-number-span" ref="draggable">{{ value }}<slot name="post_text" /></span> 
-        <span :class="`hint ${tooltip_fixed ? 'fixed' : ''}`"> тягни! </span>
+        <span :class="`hint ${tooltip_fixed ? 'fixed' : ''}`">тягни! </span>
     </span> 
 </template>а
 
@@ -65,9 +65,10 @@ export default {
         },
 
         dragstart: function(event) {
+            console.log(event)
             this.tooltip_fixed = false;
             this.dragging = true;
-            this.$refs.draggable.setPointerCapture(event.identifier);
+            document.documentElement.style.cursor = "col-resize"
 
             this.start_x = event.x;
             this.start_v = this.value;
@@ -75,7 +76,7 @@ export default {
     
         dragend: function(event) {
             this.dragging = false;
-            this.$refs.draggable.releasePointerCapture(event.identifier);
+            document.documentElement.style.cursor = null;
         },
 
     }
@@ -87,22 +88,37 @@ export default {
 
 .adjustable-number {
     position: relative;
+    font-family: monospace;
+
+    @keyframes blink {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+    }
 
     .hint {
         position: absolute;
-        bottom: 120%;
-        left: 0;
+        bottom: -2px;
+        left: 110%;
         color: #46f;
         z-index: 100000;
         padding: 0 0.5em;
+        // margin-left: -0.5em;
 
         display: none;
 
         &.fixed {
+            animation: blink 1.5s infinite;
             display: block;
         }
 
         background-color: rgba(255,255,255,0.9)
+    }
+
+    &.dragging {
+        .hint {
+            display: block;
+        }
     }
 
     &:hover, &:focus {

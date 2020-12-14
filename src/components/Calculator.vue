@@ -3,7 +3,6 @@
 <div class="container">
   <div class="main-box">
     <p class="row middle-content">
-      <span>100 людей.</span> 
       <span v-if="show_infection_rate">
         Відсоток захворюваності 
         <span v-if="pre_test_readonly"> {{pre_test_p}}%</span>
@@ -29,54 +28,74 @@
       <br>
       <span v-if="show_specificity">(специфічність: ~{{pf(specificity)}}) </span>
     </p>    
+
+    <p class="row middle-content">
+      <span>100 людей. Із них:</span> 
+    </p>
     
-    <div class="legend row">
-      <div :class="`split ${split ? 'active' : 'middle-content'}`">
-        <div class="microbox">
+    <div :class="`main-grid ${this.tested ? 'tested' : ''}`" v-if="split">
+      <div class="microbox legend pre-legend ill margin-top-mobile">      
+        <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід:</span></p>  
+      </div>
+
+      <div class="microbox people ill">
+        <human v-for="p in people.ill" :key="p.i" 
+              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+      </div>
+
+      <div class="microbox legend post-legend margin-left-mobile">
+        <p v-if="tp"><human class="human ill test_positive"/> <span>- {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
+        <p v-if="fn"><human class="human ill test_negative"/> <span>- {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
+      </div>
+
+      <div class="microbox legend pre-legend healthy margin-top-mobile">      
+        <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей:</span></p>  
+      </div>
+
+      <div class="microbox people healthy">
+        <human v-for="p in people.healthy" :key="p.i" 
+              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+      </div>
+
+      <div class="microbox legend post-legend margin-left-mobile">
+        <p v-if="tn"><human class="human healthy test_negative"/> <span>- {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
+        <p v-if="fp"><human class="human healthy test_positive"/> <span>- {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>    
+      </div>
+    </div>
+
+    <template v-else>
+
+      <div class="legend row">
+        <div class="split middle-content">
           <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
           <!-- <div class="hugging-line"></div> -->
-        </div>
-        <div class="microbox">
           <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
           <!-- <div class="hugging-line"></div> -->
         </div>
       </div>
-    </div>
-    <div :class="`people ${this.tested ? 'tested' : ''}`">
-      
-      <div class="split active" v-if="split">
-        <div class="microbox">
-          <human v-for="p in people.ill" :key="p.i" 
-                :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
-        </div>
-        
-        <div class="microbox">
-          <human v-for="p in people.healthy" :key="p.i" 
+
+      <div :class="`people ${this.tested ? 'tested' : ''}`">
+        <div class="middle-content">
+          <human v-for="p in [...people.ill, ...people.healthy]" :key="p.i" 
                 :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
         </div>
       </div>
-      <div v-else class="middle-content">
-        <human v-for="p in [...people.ill, ...people.healthy]" :key="p.i" 
-              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
 
-      </div>
-    </div>
+      <div class="legend row-after tested" v-if="tested">
+        <div :class="`split ${split ? 'active' : 'middle-content'}`">
+          <div class="microbox">
+            <p v-if="tp"><human class="human ill test_positive"/> <span>- {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
+            <p v-if="fn"><human class="human ill test_negative"/> <span>- {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
+          </div>
 
-
-    <div class="legend row-after tested" v-if="tested">
-      <div :class="`split ${split ? 'active' : 'middle-content'}`">
-        <div class="microbox">
-          <p v-if="tp"><human class="human ill test_positive"/> <span>  {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
-          <p v-if="fn"><human class="human ill test_negative"/> <span> {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
-        </div>
-
-        <div class="microbox">
-          <p v-if="tn"><human class="human healthy test_negative"/> <span> {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
-          <p v-if="fp"><human class="human healthy test_positive"/> <span> {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>    
+          <div class="microbox">
+            <p v-if="tn"><human class="human healthy test_negative"/> <span>- {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
+            <p v-if="fp"><human class="human healthy test_positive"/> <span>- {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>    
+          </div>
         </div>
       </div>
-    </div>
 
+    </template>
 
     <div class="row-after" v-if="show_btn">
       <button @click="() =>tested = !tested">{{this.tested ? 'Скинути' : 'Тестувати за допомогою ПЦР!'}}</button>
@@ -230,8 +249,6 @@ p {
   vertical-align: middle;
   height: 24px;
   width: 16px;
-  // margin:0 3px;
-
 }
 
 .middle-content {
@@ -241,12 +258,11 @@ p {
 }
 
 .main-box {
-  max-width: 600px;
+  max-width: 630px;
   margin: 0 auto;
   padding-top: 2em;
 
-  .human {
-    
+  .human {    
     &.ill {
       fill: #000;
     }
@@ -273,9 +289,19 @@ p {
   }
 }
 
-.people .split {
-  min-height: 16em;
-}
+
+
+
+
+
+// .people .split {
+//   min-height: 16em;
+// }
+
+
+
+
+
 
 .split.active {
   display: flex;
@@ -289,24 +315,18 @@ p {
     min-width: 300px;
     max-width: 430px;
   }
-
-}
-
-.hugging-line {
-  width: 100%;
-  height: 1em;
-  border-top: 1px solid black;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
 }
 
 
-input[type='number'] {
-  max-width: 3em;
-  border: 1px solid #333;
-  padding: 0.3em;
-  padding-right: 0.1em;
-}
+
+// .hugging-line {
+//   width: 100%;
+//   height: 1em;
+//   border-top: 1px solid black;
+//   border-left: 1px solid black;
+//   border-right: 1px solid black;
+// }
+
 
 .tested .human {
   &.test_positive {
@@ -351,30 +371,51 @@ button {
   display: flex;
   gap: 1em;
   margin-bottom: 0.5em;;
-
-  svg { }
-
   span {
     width:100%;
   }
 }
 
- </style>
+.main-grid {
+  display: grid;
+  grid-template-columns: 300px 300px;
+  grid-column-gap: 3em;
 
- <style lang="scss">
-  svg {
-    shape-rendering: crispEdges;
-    // border: 1px solid black;
+  grid-template-rows: auto minmax(14em, auto);
+  grid-row-gap: 1em;
+
+  .microbox {
+    &.pre-legend {grid-row: 1}
+    &.people {grid-row: 2}
+    &.post-legend {grid-row: 3}
   }
 
-  .adjustable-number-span {
-    display: inline-block;
-    min-width: 3em;
-  }
-
-  #day-after-exposure-an {
-    .adjustable-number-span {
-      min-width: 1.5em;
+  @media only screen and (max-width: 650px)  {
+      display: block;
+      max-width: 430px;
+      margin: 0 auto;
+      .microbox {margin-bottom: 0.5em;}
+      .margin-top-mobile {margin-top: 3em;}
+      .margin-left-mobile {margin-left: 2em;}
     }
+}
+
+</style>
+
+<style lang="scss">
+svg {
+  shape-rendering: crispEdges;
+  // border: 1px solid black;
+}
+
+.adjustable-number-span {
+  display: inline-block;
+  min-width: 3em;
+}
+
+#day-after-exposure-an {
+  .adjustable-number-span {
+    min-width: 1.5em;
   }
- </style>
+}
+</style>
