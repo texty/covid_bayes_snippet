@@ -11,7 +11,6 @@
         </adjustable-number>
       </span>
       
-      <br>
       <span v-if="Number.isInteger(day_after_exposure)">
         ПЛР тест зроблений на 
         <adjustable-number id="day-after-exposure-an" 
@@ -24,9 +23,14 @@
         <span class="pre">&nbsp;&nbsp; день після контакту із вірусом. </span>
          
       </span>
-      <span v-if="show_sensitivity">(чутливість: ~{{pf(sensitivity)}}) </span>
-      <br>
-      <span v-if="show_specificity">(специфічність: ~{{pf(specificity)}}) </span>
+      <template v-if="show_sensitivity || show_specificity">
+        <br>  
+        <span class="grey">
+        (<span v-if="show_sensitivity">чутливість: ~{{pf(sensitivity)}};</span>
+          &nbsp; 
+          <span v-if="show_specificity">специфічність: ~{{pf(specificity)}}</span>)
+        </span>
+      </template>
     </p>    
 
     <p class="row middle-content">
@@ -398,6 +402,10 @@ button {
       .margin-top-mobile {margin-top: 3em;}
       .margin-left-mobile {margin-left: 2em;}
     }
+}
+
+.grey {
+  color: grey;
 }
 
 </style>
