@@ -4,7 +4,7 @@
   <div class="main-box">
     <p class="row middle-content">
       <span v-if="show_infection_rate">
-        Відсоток захворюваності 
+        Початкові шанси захворіти (відсоток захворюваності):
         <span v-if="pre_test_readonly"> {{pre_test_p}}%</span>
         <adjustable-number v-else :value.sync="pre_test_p" >
           <template v-slot:post_text> %</template>
@@ -144,7 +144,7 @@ export default {
     return {
       pre_test_p: 80, // _p means in percents
       sensitivity_default: 0.7,
-      specificity: 0.97,
+      specificity: 0.99,
       day_after_exposure: 5,
       tested: true,
       split: true,
