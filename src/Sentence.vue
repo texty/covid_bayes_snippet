@@ -2,12 +2,12 @@
   <div>
     <p>
       На 
-      <adjustable-number :value.sync="day_after_exposure" :min="0" :max="20"  >
-        <template v-slot:post_text> -ий</template>
+      <adjustable-number :value.sync="day_after_exposure" :min="0" :max="20">
+        <template v-slot:post_text>-ий</template>
       </adjustable-number> 
       день після інфікування, за умови того, що початкова ймовірність захворіти була 
       <adjustable-number :value.sync="pre_test_p" :tooltip_fixed="false" >
-        <template v-slot:post_text> %</template>
+        <template v-slot:post_text>%</template>
       </adjustable-number>, ймовірність 
       що ваш негативний результат справжній (тобто ви справді не хворієте), 
       буде складати <span class="result">{{negative_result_is_true_p}}% </span>
