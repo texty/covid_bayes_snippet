@@ -34,7 +34,7 @@
     </p>    
 
     <p class="row middle-content">
-      <span>100 людей. Із них:</span> 
+      <span v-if="show_total_title">100 людей. Із них:</span> 
     </p>
     
     <div :class="`main-grid ${this.tested ? 'tested' : ''}`" v-if="split">
@@ -133,7 +133,7 @@ export default {
 
     for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
                     'all_n', 'sensitivity_default', 'specificity', 'tested', 'split', 
-                    'show_btn', 'show_sensitivity', 'show_specificity',
+                    'show_btn', 'show_sensitivity', 'show_specificity', 'show_total_title',
                     'day_after_exposure']) {
       set_from_query(p);
     }
@@ -155,6 +155,7 @@ export default {
       show_infection_rate: true,
       show_sensitivity: false,
       show_specificity: false,
+      show_total_title: true,
 
       show_btn: false,
       
