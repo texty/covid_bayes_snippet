@@ -134,7 +134,7 @@ export default {
     for (const p of ['pre_test_p', 'pre_test_readonly', 'tp', 'tn', 'fp', 'fn', 'all_p', 
                     'all_n', 'sensitivity_default', 'specificity', 'tested', 'split', 
                     'show_btn', 'show_sensitivity', 'show_specificity', 'show_total_title',
-                    'day_after_exposure']) {
+                    'day_after_exposure', 'circle']) {
       set_from_query(p);
     }
 
@@ -156,7 +156,7 @@ export default {
       show_sensitivity: false,
       show_specificity: false,
       show_total_title: true,
-      circle: true,
+      circle: false,
 
       show_btn: false,
       
