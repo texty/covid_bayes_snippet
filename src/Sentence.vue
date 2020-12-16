@@ -9,8 +9,8 @@
       <adjustable-number :value.sync="pre_test_p" :tooltip_fixed="false" >
         <template v-slot:post_text>%</template>
       </adjustable-number>, ймовірність 
-      що ваш негативний результат справжній (тобто ви справді не хворієте), 
-      буде складати <span class="result">{{negative_result_is_true_p}}% </span>
+      що ваш негативний результат є помилковим (тобто ви хворієте), 
+      буде складати <span class="result">{{negative_result_is_false_p}}% </span>
     </p>
   </div>
 </template>
@@ -32,13 +32,10 @@ export default {
   
   data() {
     return {
-      day_after_exposure: 5,
+      day_after_exposure: 7,
       pre_test_p: 80,
       sensitivity_default: 0.7,
       specificity: .99
-      // negative_result_is_true: 
-
-
     }
   },
 
@@ -56,7 +53,7 @@ export default {
     },
 
     true_positive_p() {
-      return Math.round(this.pre_test * this.sensitivity * 100)
+      return this.pre_test * this.sensitivity * 100
     },
 
     false_negative_p() {
@@ -64,15 +61,15 @@ export default {
     },
 
     true_negative_p() {
-      return Math.round((100 - this.pre_test_p) * this.specificity)
+      return (100 - this.pre_test_p) * this.specificity
     },
 
     false_positive_p() {
       return (100 - this.pre_test_p) - this.true_negative_p 
     },
 
-    negative_result_is_true_p() {
-      return Math.round(this.true_negative_p / (this.true_negative_p + this.false_negative_p) * 100);
+    negative_result_is_false_p() {
+      return Math.round(this.false_negative_p / (this.true_negative_p + this.false_negative_p) * 100);
     }
   }
 }

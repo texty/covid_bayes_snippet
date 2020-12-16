@@ -5,7 +5,7 @@
             <polygon points="20,28 22,28 22,35 28,35 28,28 30,28 30,21 20,21 "/><rect x="23" y="15" width="4" height="4"/>
         </template>   
         <template v-else>
-            <circle cx="25" cy="24" r="6"/>
+            <circle cx="25" cy="24" r="5"/>
         </template>  
     </svg>
 </template>
