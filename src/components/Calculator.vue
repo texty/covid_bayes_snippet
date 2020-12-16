@@ -34,36 +34,36 @@
     </p>    
 
     <p class="row middle-content">
-      <span v-if="show_total_title">100 людей. Із них:</span> 
+      <span v-if="show_total_title">{{lgd_total_txt}}</span> 
     </p>
     
     <div :class="`main-grid ${this.tested ? 'tested' : ''}`" v-if="split">
       <div class="microbox legend pre-legend ill margin-top-mobile">      
-        <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід:</span></p>  
+        <p v-if="all_p"><human class="human ill" :circle="circle" /> <span> {{ pre_test_p }} {{lgd_ill_txt}}:</span></p>  
       </div>
 
       <div class="microbox people ill">
         <human v-for="p in people.ill" :key="p.i" 
-              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" :circle="circle" />
       </div>
 
       <div class="microbox legend post-legend margin-left-mobile">
-        <p v-if="tp"><human class="human ill test_positive"/> <span>- {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
-        <p v-if="fn"><human class="human ill test_negative"/> <span>- {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
+        <p v-if="tp"><human class="human ill test_positive" :circle="circle" /> <span>- {{ true_positive_p }} {{lgd_tp_txt}} </span></p>  
+        <p v-if="fn"><human class="human ill test_negative" :circle="circle" /> <span>- {{ false_negative_p }} {{lgd_fn_txt}} </span></p>  
       </div>
 
       <div class="microbox legend pre-legend healthy margin-top-mobile">      
-        <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей:</span></p>  
+        <p v-if="all_n"><human class="human healthy" :circle="circle"/> <span> {{ 100-pre_test_p }} {{lgd_healthy_txt}}</span></p>  
       </div>
 
       <div class="microbox people healthy">
         <human v-for="p in people.healthy" :key="p.i" 
-              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+              :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" :circle="circle" />
       </div>
 
       <div class="microbox legend post-legend margin-left-mobile">
-        <p v-if="tn"><human class="human healthy test_negative"/> <span>- {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
-        <p v-if="fp"><human class="human healthy test_positive"/> <span>- {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>    
+        <p v-if="tn"><human class="human healthy test_negative" :circle="circle"/> <span>- {{ true_negative_p }} {{lgd_tn_txt}} </span></p>  
+        <p v-if="fp"><human class="human healthy test_positive" :circle="circle"/> <span>- {{ false_positive_p }} {{lgd_fp_txt}} </span></p>    
       </div>
     </div>
 
@@ -71,9 +71,9 @@
 
       <div class="legend row">
         <div class="split middle-content">
-          <p v-if="all_p"><human class="human ill"/> <span> {{ pre_test_p }} людей хворі на ковід</span></p>  
+          <p v-if="all_p"><human class="human ill" :circle="circle"/> <span> {{ pre_test_p }} {{lgd_ill_txt}}:</span></p>  
           <!-- <div class="hugging-line"></div> -->
-          <p v-if="all_n"><human class="human healthy"/> <span> {{ 100-pre_test_p }} здорових людей </span></p>  
+          <p v-if="all_n"><human class="human healthy" :circle="circle"/> <span> {{ 100-pre_test_p }} {{lgd_healthy_txt}}</span></p>  
           <!-- <div class="hugging-line"></div> -->
         </div>
       </div>
@@ -81,20 +81,20 @@
       <div :class="`people ${this.tested ? 'tested' : ''}`">
         <div class="middle-content">
           <human v-for="p in [...people.ill, ...people.healthy]" :key="p.i" 
-                :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" />
+                :class="`human ${p.covid ? 'ill' : 'healthy'} ${p.test ? 'test_positive' : 'test_negative'}`" :circle="circle" />
         </div>
       </div>
 
       <div class="legend row-after tested" v-if="tested">
         <div :class="`split ${split ? 'active' : 'middle-content'}`">
           <div class="microbox">
-            <p v-if="tp"><human class="human ill test_positive"/> <span>- {{ true_positive_p }} хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат) </span></p>  
-            <p v-if="fn"><human class="human ill test_negative"/> <span>- {{ false_negative_p }} хворих на ковід із негативним тестом (хибно негативний результат) </span></p>  
+            <p v-if="tp"><human class="human ill test_positive" :circle="circle"/> <span>- {{ true_positive_p }} {{lgd_tp_txt}} </span></p>  
+            <p v-if="fn"><human class="human ill test_negative" :circle="circle"/> <span>- {{ false_negative_p }} {{lgd_fn_txt}} </span></p>  
           </div>
 
           <div class="microbox">
-            <p v-if="tn"><human class="human healthy test_negative"/> <span>- {{ true_negative_p }} не хворих на ковід з негативним тестом (істинно негативних) </span></p>  
-            <p v-if="fp"><human class="human healthy test_positive"/> <span>- {{ false_positive_p }} не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат) </span></p>    
+            <p v-if="tn"><human class="human healthy test_negative" :circle="circle"/> <span>- {{ true_negative_p }} {{lgd_tn_txt}} </span></p>  
+            <p v-if="fp"><human class="human healthy test_positive" :circle="circle"/> <span>- {{ false_positive_p }} {{lgd_fp_txt}} </span></p>    
           </div>
         </div>
       </div>
@@ -156,6 +156,7 @@ export default {
       show_sensitivity: false,
       show_specificity: false,
       show_total_title: true,
+      circle: true,
 
       show_btn: false,
       
@@ -221,6 +222,26 @@ export default {
       return (100 - this.pre_test_p) - this.true_negative_p 
     },
 
+    
+    lgd_total_txt() {return this.circle ? "100 «шансів». Із них:" : "100 людей. Із них:"},
+    lgd_ill_txt() {return this.circle ? "шансів бути хворим на ковід" : "людей хворих на ковід"},
+    lgd_healthy_txt() {return this.circle ? "шансів бути здоровим:" : "здорових людей:"},
+
+    lgd_tp_txt() {return this.circle ? 
+      'шансів бути хворим, і отримати правильний "позитивний" тест (істинно позитивний результат)' : 
+      'хворих на ковід, яких тест визначив правильно як "позитивних" (істинно позитивний результат)'},
+    
+    lgd_fp_txt() {return this.circle ? 
+      'шансів бути здоровим, і отримати помилковий "позитивний" тест (хибно позитивний результат)' : 
+      'не хворих, яких тест помилково визначив як "позитивних" (хибно позитивний результат)'},
+    
+    lgd_tn_txt() {return this.circle ? 
+      'шансів бути здоровим, і отримати негативний тест (істинно негативний)' : 
+      'не хворих на ковід з негативним тестом (істинно негативних)'},
+    
+    lgd_fn_txt() {return this.circle ? 
+      'шансів бути хворим, і отримати хибний "негативний" тест (хибно негативний результат)': 
+      'хворих на ковід із негативним тестом (хибно негативний результат)'},
   },
 
   watch: {
@@ -414,6 +435,9 @@ button {
 <style lang="scss">
 svg {
   shape-rendering: crispEdges;
+  circle {
+    shape-rendering: geometricPrecision;
+  }
   // border: 1px solid black;
 }
 
